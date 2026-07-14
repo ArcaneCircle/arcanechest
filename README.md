@@ -1,4 +1,4 @@
-# Arcane Chest
+# <img src="./public/chest.webp" height="32px"> Arcane Chest
 
 An in-chat mini-app for ArcaneChat that allows to wrap content
 (called "gem") inside a locked chest, only people with access to the
