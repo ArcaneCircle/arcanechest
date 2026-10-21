@@ -94,6 +94,20 @@
   <body>
     <div id="app"></div>
     <script type="module">
+      function uint8ToBase64(uint8) {
+        let binary = "";
+        const bytes = new Uint8Array(uint8);
+        const len = bytes.byteLength;
+        const chunkSize = 16384; // 16KB chunks to stay below the argument limit
+        for (let i = 0; i < len; i += chunkSize) {
+          binary += String.fromCharCode.apply(
+            null,
+            bytes.subarray(i, i + chunkSize),
+          );
+        }
+        return btoa(binary);
+      }
+
       async function encryptData(key, plaintextBytes) {
         const iv = crypto.getRandomValues(new Uint8Array(12));
         const encryptedBuffer = await crypto.subtle.encrypt(
@@ -103,8 +117,8 @@
         );
 
         return {
-          iv: btoa(String.fromCharCode(...iv)),
-          data: btoa(String.fromCharCode(...new Uint8Array(encryptedBuffer))),
+          iv: uint8ToBase64(iv),
+          data: uint8ToBase64(new Uint8Array(encryptedBuffer)),
         };
       }
 
@@ -184,7 +198,7 @@
         window.parent.PASSPHRASE,
         newSalt,
       );
-      renderPage(newKey, btoa(String.fromCharCode(...newSalt)));
+      renderPage(newKey, uint8ToBase64(newSalt));
     </script>
   </body>
 </html>
